@@ -48,6 +48,10 @@ public class Games extends SuperController {
 		return ok(jsonInfo("joined game"));
 	}
 	
+	public static Result list() {
+		return ok(Json.toJson(Game.findAll()));
+	}
+	
 	public static Result quit() {
 		User currentUser = currentUser();
 		if (currentUser.getGame() == null) {

@@ -11,8 +11,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
-import org.hibernate.annotations.Fetch;
-
 import play.db.jpa.JPA;
 import exceptions.AlreadyInGameException;
 import exceptions.TooManyPlayersException;
@@ -55,6 +53,11 @@ public class Game {
 				JPA.em().remove(this);
 			}
 		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static List<Game> findAll() {
+		return (List<Game>)JPA.em().createQuery("SELECT g FROM Game g").getResultList();
 	}
 	
 	public static Game findById(long id) {
