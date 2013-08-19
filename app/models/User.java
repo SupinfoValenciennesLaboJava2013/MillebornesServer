@@ -8,8 +8,10 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.NoResultException;
 
-import exceptions.AlreadyInGameException;
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 import play.db.jpa.JPA;
+import exceptions.AlreadyInGameException;
 
 @Entity
 public class User {
@@ -25,10 +27,15 @@ public class User {
 	private String password;
 	
 	@ManyToOne
+	@JsonIgnore
 	private Game game;
 	
 	public void removeGame() {
 		this.game = null;
+	}
+	
+	public boolean inGame() {
+		return this.game != null;
 	}
 	
 	public void setGame(Game game) throws AlreadyInGameException {
