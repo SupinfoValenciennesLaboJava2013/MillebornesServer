@@ -24,6 +24,7 @@ public class User {
 	private String username;
 	
 	@Column
+	@JsonIgnore
 	private String password;
 	
 	@ManyToOne
