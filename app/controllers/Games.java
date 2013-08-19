@@ -51,7 +51,7 @@ public class Games extends SuperController {
 	public static Result quit() {
 		User currentUser = currentUser();
 		if (currentUser.getGame() == null) {
-			return badRequest("player does not have a game");
+			return badRequest(jsonError("player does not have a game"));
 		}
 		Game game = currentUser.getGame();
 		game.removePlayer(currentUser);
