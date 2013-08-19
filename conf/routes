@@ -13,6 +13,7 @@ GET		/users/info					controllers.Users.info()
 POST	/games/create				controllers.Games.create()
 POST	/games/join/:gameId			controllers.Games.join(gameId: Long)
 POST	/games/quit					controllers.Games.quit()
+GET 	/games/info					controllers.Games.info()
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

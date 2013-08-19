@@ -3,11 +3,15 @@ package controllers;
 import models.Game;
 import models.User;
 import play.data.Form;
+import play.db.jpa.Transactional;
+import play.libs.Json;
 import play.mvc.Result;
 import play.mvc.Security.Authenticated;
 import exceptions.AlreadyInGameException;
+import exceptions.TooManyPlayersException;
 import forms.Gameinfo;
 
+@Transactional
 @Authenticated(Secured.class)
 public class Games extends SuperController {
 
@@ -16,17 +20,18 @@ public class Games extends SuperController {
 		if (gameinfoForm.hasErrors()) {
 			return badRequest(jsonError("Wrong parameters for gameinfo"));
 		}
+		User currentUser = currentUser();
+		if (currentUser.inGame()) {
+			return badRequest(jsonError("Player already in a game"));
+		}
 		Game game = new Game();
 		game.setName(gameinfoForm.get().getName());
-		User currentUser = currentUser();
 		try {
-			game.addPlayer(currentUser);
+			game.addFirstPlayer(currentUser);
 		} catch (AlreadyInGameException ex) {
 			return badRequest(jsonError("Player already in a game"));
 		}
 		Game.save(game);
-//		currentUser.save();
-		session("game", String.valueOf(game.getId()));
 		return ok(jsonInfo("game created"));
 	}
 	
@@ -37,10 +42,9 @@ public class Games extends SuperController {
 			game.addPlayer(currentUser);
 		} catch (AlreadyInGameException ex) {
 			return badRequest(jsonError("Player already in a game"));
+		} catch (TooManyPlayersException e) {
+			return badRequest(jsonError("This game is full"));
 		}
-//		game.save();
-//		currentUser.save();
-		session("game", String.valueOf(game.getId()));
 		return ok(jsonInfo("joined game"));
 	}
 	
@@ -51,10 +55,15 @@ public class Games extends SuperController {
 		}
 		Game game = currentUser.getGame();
 		game.removePlayer(currentUser);
-//		game.save();
-//		currentUser.save();
-		session().remove("game");
 		return ok(jsonInfo("quit game"));
+	}
+	
+	public static Result info() {
+		User currentUser = currentUser();
+		if (currentUser.inGame()) {
+			return ok(Json.toJson(currentUser.getGame()));
+		}
+		return badRequest(jsonError("Not in a game"));
 	}
 	
 }
