@@ -14,6 +14,8 @@ POST	/games/create				controllers.Games.create()
 POST	/games/join/:gameId			controllers.Games.join(gameId: Long)
 POST	/games/quit					controllers.Games.quit()
 GET 	/games/info					controllers.Games.info()
+GET		/games/stream				controllers.Games.stream()
+GET		/games/send					controllers.Games.send()
 GET		/games/						controllers.Games.list()
 
 # Map static resources from the /public folder to the /assets URL path
