@@ -2,9 +2,6 @@ package controllers;
 
 import models.Game;
 import models.User;
-
-import org.codehaus.jackson.node.ObjectNode;
-
 import play.data.Form;
 import play.db.jpa.Transactional;
 import play.libs.Json;
@@ -28,9 +25,7 @@ public class Users extends SuperController {
 		user.setUsername(cred.username);
 		user.setPassword(cred.password);
 		User.save(user);
-		ObjectNode result = Json.newObject();
-		result.put("message", cred.username);
-		return ok(result);
+		return ok(jsonInfo("User successfully registered"));
 	}
 	
 	@Transactional
