@@ -1,6 +1,9 @@
 package controllers;
 
 import static akka.pattern.Patterns.ask;
+
+import java.util.List;
+
 import models.Game;
 import models.User;
 import play.data.Form;
@@ -10,10 +13,13 @@ import play.libs.F.Function;
 import play.libs.Json;
 import play.mvc.Result;
 import play.mvc.Security.Authenticated;
+import util.Command;
+import util.GameCommands;
 import actors.GameStreamActor;
 import akka.actor.ActorRef;
 import akka.actor.Props;
 import exceptions.AlreadyInGameException;
+import exceptions.NotInAGameException;
 import exceptions.TooManyPlayersException;
 import forms.Gameinfo;
 
@@ -25,12 +31,26 @@ public class Games extends SuperController {
 	public static final ActorRef myActor = Akka.system().actorOf(new Props(GameStreamActor.class));
 	
 	public static Result stream() {
+		final User currentUser = currentUser();
+		List<Command> commands;
+		try {
+			commands = GameCommands.getCommands(currentUser);
+		} catch (NotInAGameException e) {
+			return badRequest(jsonError("not in a game"));
+		}
+		if (commands.size() != 0) {
+			return ok(Json.toJson(commands));
+		}
 		return async(
 			Akka.asPromise(ask(myActor, GameStreamActor.Command.subscribe, 5000))
 				.map(
 					new Function<Object,Result>() {
 						public Result apply(Object response) {
-							return ok(jsonInfo("quelque chose de nouveau !"));
+							try {
+								return ok(Json.toJson(GameCommands.getCommands(currentUser)));
+							} catch (NotInAGameException e) {
+								return badRequest(jsonError("not in a game"));
+							}
 						}
 					}
 				).recover(new Function<Throwable, Result>() {
@@ -44,15 +64,25 @@ public class Games extends SuperController {
 	}
 	
 	public static Result send() {
-		return async(
-			Akka.asPromise(ask(myActor, GameStreamActor.Command.send, 1000)).map(
-				new Function<Object,Result>() {
-					public Result apply(Object response) {
-						return ok(jsonInfo("ok"));
-					}
+		final User currentUser = currentUser();
+		GameCommands.getGame(currentUser.getGame()).boardcast(new Command(){{
+			setType("card.receive");
+			setArgs("100km");
+		}});
+		GameCommands.getGame(currentUser.getGame()).send(new Command(){{
+			type = "player.new";
+			args = new Object() {
+				@SuppressWarnings("unused") public String name = "toto";
+			};
+		}}, currentUser);
+		Akka.asPromise(ask(myActor, GameStreamActor.Command.send, 1000)).map(
+			new Function<Object, Void>() {
+				public Void apply(Object response) {
+					return null;
 				}
-			)
+			}
 		);
+		return ok(jsonInfo("ok"));
 	}
 	
 	public static Result create() {
