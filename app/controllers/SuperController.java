@@ -51,8 +51,18 @@ public class SuperController extends Controller {
 		GameCommands.getGame(game).boardcast(command);
 	}
 	
+	public static void sendOneCommandToGame(Game game, Command command) {
+		GameCommands.getGame(game).boardcast(command);
+		sendFinalize();
+	}
+	
 	public static void sendCommandToUser(Game game, User user, Command command) {
 		GameCommands.getGame(game).send(command, user);
+	}
+	
+	public static void sendOneCommandToUser(Game game, User user, Command command) {
+		GameCommands.getGame(game).send(command, user);
+		sendFinalize();
 	}
 	
 	public static void sendFinalize() {
