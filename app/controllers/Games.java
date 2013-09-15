@@ -16,8 +16,6 @@ import play.mvc.Security.Authenticated;
 import util.Command;
 import util.GameCommands;
 import actors.GameStreamActor;
-import akka.actor.ActorRef;
-import akka.actor.Props;
 import exceptions.AlreadyInGameException;
 import exceptions.NotInAGameException;
 import exceptions.TooManyPlayersException;
@@ -27,8 +25,6 @@ import forms.Gameinfo;
 @Transactional
 @Authenticated(Secured.class)
 public class Games extends SuperController {
-	
-	public static final ActorRef myActor = Akka.system().actorOf(new Props(GameStreamActor.class));
 	
 	public static Result stream() {
 		final User currentUser = currentUser();
@@ -65,23 +61,17 @@ public class Games extends SuperController {
 	
 	public static Result send() {
 		final User currentUser = currentUser();
-		GameCommands.getGame(currentUser.getGame()).boardcast(new Command(){{
-			setType("card.receive");
-			setArgs("100km");
+		sendCommandToGame(currentUser.getGame(), new Command(){{
+			type = "card.receive";
+			args = "100km";
 		}});
-		GameCommands.getGame(currentUser.getGame()).send(new Command(){{
+		sendCommandToUser(currentUser.getGame(), currentUser, new Command(){{
 			type = "player.new";
 			args = new Object() {
 				@SuppressWarnings("unused") public String name = "toto";
 			};
-		}}, currentUser);
-		Akka.asPromise(ask(myActor, GameStreamActor.Command.send, 1000)).map(
-			new Function<Object, Void>() {
-				public Void apply(Object response) {
-					return null;
-				}
-			}
-		);
+		}});
+		sendFinalize();
 		return ok(jsonInfo("ok"));
 	}
 	

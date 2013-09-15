@@ -4,6 +4,12 @@ public class Command {
 	protected String type;
 	protected Object args;
 	
+	public Command() {}
+	
+	public Command(String type) {
+		setType(type);
+	}
+	
 	public String getType() {
 		return type;
 	}
