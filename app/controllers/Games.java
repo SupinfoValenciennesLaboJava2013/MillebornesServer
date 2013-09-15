@@ -105,13 +105,12 @@ public class Games extends SuperController {
 		} catch (TooManyPlayersException e) {
 			return badRequest(jsonError("This game is full"));
 		}
-		sendCommandToGame(currentUser.getGame(), new Command("player.join"){{
+		sendOneCommandToGame(currentUser.getGame(), new Command("player.join"){{
 			args = new Object(){
 				@SuppressWarnings("unused")
 				public String name = currentUser.getUsername();
 			};
 		}});
-		sendFinalize();
 		return ok(jsonInfo("joined game"));
 	}
 	
