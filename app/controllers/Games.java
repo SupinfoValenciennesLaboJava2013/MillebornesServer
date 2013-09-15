@@ -97,7 +97,7 @@ public class Games extends SuperController {
 	
 	public static Result join(long gameId) {
 		Game game = Game.findById(gameId);
-		User currentUser = currentUser();
+		final User currentUser = currentUser();
 		try {
 			game.addPlayer(currentUser);
 		} catch (AlreadyInGameException ex) {
@@ -105,6 +105,13 @@ public class Games extends SuperController {
 		} catch (TooManyPlayersException e) {
 			return badRequest(jsonError("This game is full"));
 		}
+		sendCommandToGame(currentUser.getGame(), new Command("player.join"){{
+			args = new Object(){
+				@SuppressWarnings("unused")
+				public String name = currentUser.getUsername();
+			};
+		}});
+		sendFinalize();
 		return ok(jsonInfo("joined game"));
 	}
 	
