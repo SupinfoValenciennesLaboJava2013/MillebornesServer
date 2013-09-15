@@ -13,9 +13,14 @@ import play.libs.F.Function;
 import play.libs.Json;
 import play.mvc.Result;
 import play.mvc.Security.Authenticated;
-import util.Command;
 import util.GameCommands;
 import actors.GameStreamActor;
+
+import commands.AbstractCommand;
+import commands.CardReceiveCommand;
+import commands.PlayerJoinCommand;
+import commands.PlayerQuitCommand;
+
 import exceptions.AlreadyInGameException;
 import exceptions.NotInAGameException;
 import exceptions.TooManyPlayersException;
@@ -28,7 +33,7 @@ public class Games extends SuperController {
 	
 	public static Result stream() {
 		final User currentUser = currentUser();
-		List<Command> commands;
+		List<AbstractCommand> commands;
 		try {
 			commands = GameCommands.getCommands(currentUser);
 		} catch (NotInAGameException e) {
@@ -61,16 +66,8 @@ public class Games extends SuperController {
 	
 	public static Result send() {
 		final User currentUser = currentUser();
-		sendCommandToGame(currentUser.getGame(), new Command(){{
-			type = "card.receive";
-			args = "100km";
-		}});
-		sendCommandToUser(currentUser.getGame(), currentUser, new Command(){{
-			type = "player.new";
-			args = new Object() {
-				@SuppressWarnings("unused") public String name = "toto";
-			};
-		}});
+		sendCommandToGame(currentUser.getGame(), new CardReceiveCommand("100km"));
+		sendCommandToUser(currentUser.getGame(), currentUser, new PlayerJoinCommand("admin"));
 		sendFinalize();
 		return ok(jsonInfo("ok"));
 	}
@@ -105,12 +102,7 @@ public class Games extends SuperController {
 		} catch (TooManyPlayersException e) {
 			return badRequest(jsonError("This game is full"));
 		}
-		sendOneCommandToGame(currentUser.getGame(), new Command("player.join"){{
-			args = new Object(){
-				@SuppressWarnings("unused")
-				public String name = currentUser.getUsername();
-			};
-		}});
+		sendOneCommandToGame(currentUser.getGame(), new PlayerJoinCommand(currentUser.getUsername()));
 		return ok(jsonInfo("joined game"));
 	}
 	
@@ -125,12 +117,7 @@ public class Games extends SuperController {
 		}
 		Game game = currentUser.getGame();
 		game.removePlayer(currentUser);
-		sendOneCommandToGame(currentUser.getGame(), new Command("player.quit"){{
-			args = new Object() {
-				@SuppressWarnings("unused")
-				public String name = currentUser.getUsername();
-			};
-		}});
+		sendOneCommandToGame(currentUser.getGame(), new PlayerQuitCommand(currentUser.getUsername()));
 		return ok(jsonInfo("quit game"));
 	}
 	

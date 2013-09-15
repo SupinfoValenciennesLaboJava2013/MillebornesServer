@@ -5,9 +5,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import exceptions.NotInAGameException;
 import models.Game;
 import models.User;
+
+import commands.AbstractCommand;
+
+import exceptions.NotInAGameException;
 
 public class GameCommands {
 
@@ -26,7 +29,7 @@ public class GameCommands {
 		return gc;
 	}
 	
-	public static List<Command> getCommands(User user) throws NotInAGameException {
+	public static List<AbstractCommand> getCommands(User user) throws NotInAGameException {
 		if (!user.inGame()) {
 			throw new NotInAGameException();
 		}
@@ -38,36 +41,36 @@ public class GameCommands {
 	}
 	
 	private GameCommands() {
-		this.commands = new HashMap<Long, List<Command>>();
+		this.commands = new HashMap<Long, List<AbstractCommand>>();
 	}
 	
-	private Map<Long, List<Command>> commands;
+	private Map<Long, List<AbstractCommand>> commands;
 	
-	public void boardcast(Command command) {
-		for (List<Command> entry: commands.values()) {
+	public void boardcast(AbstractCommand command) {
+		for (List<AbstractCommand> entry: commands.values()) {
 			entry.add(command);
 		}
 	}
 	
-	public void send(Command command, User user) {
-		List<Command> cm = commands.get(user.getId());
+	public void send(AbstractCommand command, User user) {
+		List<AbstractCommand> cm = commands.get(user.getId());
 		if (cm == null) {
-			cm = new LinkedList<Command>();
+			cm = new LinkedList<AbstractCommand>();
 			commands.put(user.getId(), cm);
 		}
 		cm.add(command);
 	}
 	
-	public List<Command> getCommandsForUser(User user) throws NotInAGameException {
+	public List<AbstractCommand> getCommandsForUser(User user) throws NotInAGameException {
 		if (!user.inGame()) {
 			throw new NotInAGameException();
 		}
-		List<Command> result = commands.get(user.getId());
+		List<AbstractCommand> result = commands.get(user.getId());
 		if (result == null) {
-			result = new LinkedList<Command>();
+			result = new LinkedList<AbstractCommand>();
 			commands.put(user.getId(), result);
 		}
-		commands.put(user.getId(), new LinkedList<Command>());
+		commands.put(user.getId(), new LinkedList<AbstractCommand>());
 		return result;
 	}
 	

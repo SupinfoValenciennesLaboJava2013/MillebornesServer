@@ -6,16 +6,17 @@ import models.User;
 
 import org.codehaus.jackson.node.ObjectNode;
 
+import play.libs.Akka;
+import play.libs.F.Function;
+import play.libs.Json;
+import play.mvc.Controller;
+import play.mvc.Security.Authenticated;
+import util.GameCommands;
 import actors.GameStreamActor;
 import akka.actor.ActorRef;
 import akka.actor.Props;
-import play.libs.Akka;
-import play.libs.Json;
-import play.libs.F.Function;
-import play.mvc.Controller;
-import play.mvc.Security.Authenticated;
-import util.Command;
-import util.GameCommands;
+
+import commands.AbstractCommand;
 
 public class SuperController extends Controller {
 
@@ -47,20 +48,20 @@ public class SuperController extends Controller {
 		return node;
 	}
 	
-	public static void sendCommandToGame(Game game, Command command) {
+	public static void sendCommandToGame(Game game, AbstractCommand command) {
 		GameCommands.getGame(game).boardcast(command);
 	}
 	
-	public static void sendOneCommandToGame(Game game, Command command) {
+	public static void sendOneCommandToGame(Game game, AbstractCommand command) {
 		GameCommands.getGame(game).boardcast(command);
 		sendFinalize();
 	}
 	
-	public static void sendCommandToUser(Game game, User user, Command command) {
+	public static void sendCommandToUser(Game game, User user, AbstractCommand command) {
 		GameCommands.getGame(game).send(command, user);
 	}
 	
-	public static void sendOneCommandToUser(Game game, User user, Command command) {
+	public static void sendOneCommandToUser(Game game, User user, AbstractCommand command) {
 		GameCommands.getGame(game).send(command, user);
 		sendFinalize();
 	}
