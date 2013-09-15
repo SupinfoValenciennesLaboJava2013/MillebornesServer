@@ -119,12 +119,18 @@ public class Games extends SuperController {
 	}
 	
 	public static Result quit() {
-		User currentUser = currentUser();
+		final User currentUser = currentUser();
 		if (currentUser.getGame() == null) {
 			return badRequest(jsonError("player does not have a game"));
 		}
 		Game game = currentUser.getGame();
 		game.removePlayer(currentUser);
+		sendOneCommandToGame(currentUser.getGame(), new Command("player.quit"){{
+			args = new Object() {
+				@SuppressWarnings("unused")
+				public String name = currentUser.getUsername();
+			};
+		}});
 		return ok(jsonInfo("quit game"));
 	}
 	
