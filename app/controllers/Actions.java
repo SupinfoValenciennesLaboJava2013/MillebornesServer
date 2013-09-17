@@ -1,5 +1,8 @@
 package controllers;
 
+import exceptions.GameAlreadyStartedException;
+import exceptions.NotInAGameException;
+import models.User;
 import play.db.jpa.Transactional;
 import play.mvc.Result;
 import play.mvc.Security.Authenticated;
@@ -36,6 +39,18 @@ public class Actions extends SuperController {
 	 * Commence la partie
 	 */
 	public static Result start() {
-		return status(501, jsonError("Not yet implemente"));
+		User currentUser = currentUser();
+		if (currentUser.getGame() == null) {
+			return badRequest(jsonError("You are not in a game"));
+		}
+		if (currentUser.getGame().getPlayers().get(0) != currentUser) {
+			return badRequest(jsonError("Only the creator of the game can start it"));
+		}
+		try {
+			currentUser.getGame().setStarted(true);
+		} catch (GameAlreadyStartedException e) {
+			return badRequest(jsonError("The game has already started"));
+		}
+		return ok(jsonInfo("game started"));
 	}
 }

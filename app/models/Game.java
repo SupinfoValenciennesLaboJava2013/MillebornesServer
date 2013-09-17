@@ -13,6 +13,7 @@ import javax.persistence.OneToMany;
 
 import play.db.jpa.JPA;
 import exceptions.AlreadyInGameException;
+import exceptions.GameAlreadyStartedException;
 import exceptions.TooManyPlayersException;
 
 @Entity
@@ -25,6 +26,20 @@ public class Game {
 	@Column
 	private String name;
 	
+	@Column
+	private boolean started;
+	
+	public boolean isStarted() {
+		return started;
+	}
+
+	public void setStarted(boolean started) throws GameAlreadyStartedException {
+		if (this.isStarted()) {
+			throw new GameAlreadyStartedException();
+		}
+		this.started = started;
+	}
+
 	@OneToMany(mappedBy="game", fetch=FetchType.LAZY)
 	private List<User> players;
 
@@ -37,7 +52,10 @@ public class Game {
 		this.players.add(user);
 	}
 	
-	public void addPlayer(User user) throws AlreadyInGameException, TooManyPlayersException {
+	public void addPlayer(User user) throws AlreadyInGameException, TooManyPlayersException, GameAlreadyStartedException {
+		if (this.isStarted()) {
+			throw new GameAlreadyStartedException();
+		}
 		if (this.players.size() >= 5) {
 			throw new TooManyPlayersException();
 		}

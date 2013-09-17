@@ -15,13 +15,12 @@ import play.mvc.Result;
 import play.mvc.Security.Authenticated;
 import util.GameCommands;
 import actors.GameStreamActor;
-
 import commands.AbstractCommand;
 import commands.CardReceiveCommand;
 import commands.PlayerJoinCommand;
 import commands.PlayerQuitCommand;
-
 import exceptions.AlreadyInGameException;
+import exceptions.GameAlreadyStartedException;
 import exceptions.NotInAGameException;
 import exceptions.TooManyPlayersException;
 import forms.Gameinfo;
@@ -101,6 +100,8 @@ public class Games extends SuperController {
 			return badRequest(jsonError("Player already in a game"));
 		} catch (TooManyPlayersException e) {
 			return badRequest(jsonError("This game is full"));
+		} catch (GameAlreadyStartedException e) {
+			return badRequest(jsonError("The game has already started"));
 		}
 		sendOneCommandToGame(currentUser.getGame(), new PlayerJoinCommand(currentUser.getUsername()));
 		return ok(jsonInfo("joined game"));
