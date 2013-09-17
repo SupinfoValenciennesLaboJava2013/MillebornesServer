@@ -1,13 +1,13 @@
 package cards;
 
-import player.Player;
+import models.User;
 import exceptions.PlayerCantHaveMoreMalusException;
 import exceptions.WrongCardForSuchSlotException;
 
 public 	abstract class MalusCard extends Card {
-	public void setToPlayerAsMalus(Player player) throws WrongCardForSuchSlotException, PlayerCantHaveMoreMalusException {
-		if (player.getMalus() == null) {
-				player.setMalus(this);
+	public void setToPlayerAsMalus(User user) throws WrongCardForSuchSlotException, PlayerCantHaveMoreMalusException {
+		if (user.getMalus() == null) {
+			user.setMalus(this);
 		} else {
 			throw new PlayerCantHaveMoreMalusException();
 		}

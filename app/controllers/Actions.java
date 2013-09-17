@@ -1,11 +1,10 @@
 package controllers;
 
-import exceptions.GameAlreadyStartedException;
-import exceptions.NotInAGameException;
 import models.User;
 import play.db.jpa.Transactional;
 import play.mvc.Result;
 import play.mvc.Security.Authenticated;
+import exceptions.GameAlreadyStartedException;
 
 @Transactional
 @Authenticated(Secured.class)

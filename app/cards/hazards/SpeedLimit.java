@@ -1,6 +1,6 @@
 package cards.hazards;
 
-import player.Player;
+import models.User;
 import cards.Card;
 import cards.MalusCard;
 import exceptions.PlayerCantHaveMoreMalusException;
@@ -16,8 +16,8 @@ public class SpeedLimit extends MalusCard {
 	}
 	
 	@Override
-	public void setToPlayerAsMalus(Player player) throws WrongCardForSuchSlotException, PlayerCantHaveMoreMalusException {
-		super.setToPlayerAsMalus(player);
-		player.setSpeedLimited(true);
+	public void setToPlayerAsMalus(User user) throws WrongCardForSuchSlotException, PlayerCantHaveMoreMalusException {
+		super.setToPlayerAsMalus(user);
+		user.setSpeedLimited(true);
 	}
 }

@@ -1,6 +1,6 @@
 package cards;
 
-import player.Player;
+import models.User;
 import exceptions.CannotPlayThisCardException;
 
 public class DistanceCard extends Card {
@@ -36,9 +36,9 @@ public class DistanceCard extends Card {
 	}
 	
 	@Override
-	public void advancePlayer(Player player) throws CannotPlayThisCardException {
-		if (player.canAdvance(this.getKm())) {
-			player.setKm(player.getKm() + this.getKm());
+	public void advancePlayer(User user) throws CannotPlayThisCardException {
+		if (user.canAdvance(this.getKm())) {
+			user.setKm(user.getKm() + this.getKm());
 		} else {
 			throw new CannotPlayThisCardException();
 		}

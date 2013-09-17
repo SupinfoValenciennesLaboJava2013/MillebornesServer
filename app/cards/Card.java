@@ -1,8 +1,9 @@
 package cards;
 
+import models.User;
+
 import org.codehaus.jackson.annotate.JsonTypeInfo;
 
-import player.Player;
 import exceptions.CannotPlayThisCardException;
 import exceptions.PlayerCantHaveMoreMalusException;
 import exceptions.WrongCardForSuchSlotException;
@@ -60,11 +61,11 @@ public abstract class Card {
 		return false;
 	}
 	
-	public void setToPlayerAsMalus(Player player) throws WrongCardForSuchSlotException, PlayerCantHaveMoreMalusException {
+	public void setToPlayerAsMalus(User user) throws WrongCardForSuchSlotException, PlayerCantHaveMoreMalusException {
 		throw new WrongCardForSuchSlotException();
 	}
 	
-	public void advancePlayer(Player player) throws CannotPlayThisCardException {
+	public void advancePlayer(User user) throws CannotPlayThisCardException {
 		throw new CannotPlayThisCardException();
 	}
 }
