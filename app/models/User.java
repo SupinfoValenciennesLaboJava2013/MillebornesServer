@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.NoResultException;
+import javax.persistence.Transient;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
@@ -113,11 +114,14 @@ public class User {
 	public Game getGame() {
 		return game;
 	}
-	
+
+	@Transient
 	private boolean hasGreenLight = false;
-	
+
+	@Transient
 	private boolean speedLimited = false;
 	
+	@Transient
 	private ArrayList<SafetiesCard> playerSafeties = new ArrayList<SafetiesCard>();
 	
 	public void setSpeedLimited(boolean arg) {
@@ -130,6 +134,7 @@ public class User {
 	}
 	
 	// Distance parcourue, en .... km !!
+	@Transient
 	private int km;
 	
 	public void setKm(int km) {
@@ -171,6 +176,7 @@ public class User {
 	}
 	
 	// La carte malus actuellement appliquée
+	@Transient
 	public Card malus;
 	
 	public void setMalus(Card card) {
