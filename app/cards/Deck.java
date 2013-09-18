@@ -3,6 +3,21 @@ package cards;
 import java.util.LinkedList;
 import java.util.List;
 
+import cards.hazards.Accident;
+import cards.hazards.FlatTire;
+import cards.hazards.OutOfGas;
+import cards.hazards.SpeedLimit;
+import cards.hazards.Stop;
+import cards.remedies.EndOfLimit;
+import cards.remedies.Gasoline;
+import cards.remedies.GoRoll;
+import cards.remedies.Repairs;
+import cards.remedies.SpareTire;
+import cards.safeties.DrivingAce;
+import cards.safeties.ExtraTank;
+import cards.safeties.PunctureProof;
+import cards.safeties.RightOfWay;
+
 public class Deck {
 	
 	private List<Card> deck = new LinkedList<Card>();
@@ -26,7 +41,7 @@ public class Deck {
 		for(int i=0;i<4;i++)
 		{
 			deck.add(new SpeedLimit());
-			deck.add(Distance.get200km());
+			deck.add(DistanceCard.get200km());
 		}
 		//ajout D'attaque
 		for(int i=0;i<5;i++)
@@ -42,13 +57,13 @@ public class Deck {
 		//ajout de distances
 		for(int i=0;i<10;i++)
 		{
-			deck.add(Distance.get25km());
-			deck.add(Distance.get50km());
-			deck.add(Distance.get75km());
+			deck.add(DistanceCard.get25km());
+			deck.add(DistanceCard.get50km());
+			deck.add(DistanceCard.get75km());
 		}
 		//ajout de distances
 		for(int i=0;i<12;i++)
-			deck.add(Distance.get100km());
+			deck.add(DistanceCard.get100km());
 		//ajout de feu vert	
 		for(int i=0;i<14;i++)
 			deck.add(new GoRoll());
