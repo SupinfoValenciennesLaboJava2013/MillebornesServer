@@ -123,11 +123,15 @@ public class Game {
 	}
 
 	public User NextPlayer() {
-		int index = this.players.indexOf(this.currentPlayer);
-		if (index == this.players.size() - 1) {
+		if (this.currentPlayer == null) {
 			this.currentPlayer = this.players.get(0);
 		} else {
-			this.currentPlayer = this.players.get(index + 1);
+			int index = this.players.indexOf(this.currentPlayer);
+			if (index == this.players.size() - 1) {
+				this.currentPlayer = this.players.get(0);
+			} else {
+				this.currentPlayer = this.players.get(index + 1);
+			}
 		}
 		return this.currentPlayer;
 	}
