@@ -113,5 +113,20 @@ public class Game {
 	public void setName(String name) {
 		this.name = name;
 	}
-
+	
+	private User currentPlayer;
+	
+	public boolean isCurrentPlayer(User player) {
+		return this.currentPlayer == player;
+	}
+	
+	public User NextPlayer() {
+		int index = this.players.indexOf(this.currentPlayer);
+		if (index == this.players.size() - 1) {
+			this.currentPlayer = this.players.get(0);
+		} else {
+			this.currentPlayer = this.players.get(index + 1);
+		}
+		return this.currentPlayer;
+	}
 }
