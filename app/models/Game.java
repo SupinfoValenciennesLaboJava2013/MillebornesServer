@@ -116,6 +116,7 @@ public class Game {
 		this.name = name;
 	}
 
+	@Transient
 	private User currentPlayer;
 
 	public boolean isCurrentPlayer(User player) {
