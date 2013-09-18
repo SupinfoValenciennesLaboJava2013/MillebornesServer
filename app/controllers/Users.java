@@ -5,6 +5,7 @@ import models.User;
 import play.data.Form;
 import play.db.jpa.Transactional;
 import play.libs.Json;
+import play.mvc.Http;
 import play.mvc.Result;
 import play.mvc.Security.Authenticated;
 import forms.Credentials;
@@ -40,6 +41,7 @@ public class Users extends SuperController {
 			return notFound(jsonError("User not found with such credentials"));
 		}
 		session("user",  String.valueOf(user.getId()));
+		Http.Context.current().args.put("currentUser", user);
 		return ok(jsonInfo("User successfully logged in"));
 	}
 	

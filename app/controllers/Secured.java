@@ -11,14 +11,17 @@ public class Secured extends Authenticator {
     	String userIdString = ctx.session().get("user");
     	if (userIdString == null) {
     		ctx.session().remove("user");
+        	ctx.args.remove("currentUser");
     		return null;
     	}
     	Long userId = Long.parseLong(userIdString);
     	User user = User.findById(userId);
     	if (user == null) {
     		ctx.session().remove("user");
+        	ctx.args.remove("currentUser");
     		return null;
     	}
+    	ctx.args.put("currentUser", user);
         return user.getUsername();
     }
 }

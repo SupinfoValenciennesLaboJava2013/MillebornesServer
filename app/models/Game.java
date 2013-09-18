@@ -121,6 +121,9 @@ public class Game {
 	private User currentPlayer;
 
 	public boolean isCurrentPlayer(User player) {
+		if (this.currentPlayer == null) {
+			this.NextPlayer();
+		}
 		return this.currentPlayer == player;
 	}
 

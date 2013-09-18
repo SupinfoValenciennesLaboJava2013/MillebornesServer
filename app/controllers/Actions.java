@@ -1,13 +1,17 @@
 package controllers;
 
+import middlewares.InGame;
+import middlewares.MyTurn;
 import models.User;
 import play.db.jpa.Transactional;
 import play.mvc.Result;
 import play.mvc.Security.Authenticated;
+import play.mvc.With;
 import exceptions.GameAlreadyStartedException;
 
 @Transactional
 @Authenticated(Secured.class)
+@With({InGame.class, MyTurn.class})
 public class Actions extends SuperController {
 	
 	/**
@@ -39,9 +43,6 @@ public class Actions extends SuperController {
 	 */
 	public static Result start() {
 		User currentUser = currentUser();
-		if (currentUser.getGame() == null) {
-			return badRequest(jsonError("You are not in a game"));
-		}
 		if (currentUser.getGame().getPlayers().get(0) != currentUser) {
 			return badRequest(jsonError("Only the creator of the game can start it"));
 		}

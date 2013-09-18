@@ -4,6 +4,7 @@ import static akka.pattern.Patterns.ask;
 
 import java.util.List;
 
+import middlewares.InGame;
 import models.Game;
 import models.User;
 import play.data.Form;
@@ -13,12 +14,15 @@ import play.libs.F.Function;
 import play.libs.Json;
 import play.mvc.Result;
 import play.mvc.Security.Authenticated;
+import play.mvc.With;
 import util.GameCommands;
 import actors.GameStreamActor;
+
 import commands.AbstractCommand;
 import commands.CardReceiveCommand;
 import commands.PlayerJoinCommand;
 import commands.PlayerQuitCommand;
+
 import exceptions.AlreadyInGameException;
 import exceptions.GameAlreadyStartedException;
 import exceptions.NotInAGameException;
@@ -29,7 +33,10 @@ import forms.Gameinfo;
 @Transactional
 @Authenticated(Secured.class)
 public class Games extends SuperController {
-	
+
+	@Transactional
+	@Authenticated(Secured.class)
+	@With(InGame.class)
 	public static Result stream() {
 		final User currentUser = currentUser();
 		List<AbstractCommand> commands;
@@ -62,7 +69,10 @@ public class Games extends SuperController {
 				})
 		);
 	}
-	
+
+	@Transactional
+	@Authenticated(Secured.class)
+	@With(InGame.class)
 	public static Result send() {
 		final User currentUser = currentUser();
 		sendCommandToGame(currentUser.getGame(), new CardReceiveCommand("100km"));
@@ -110,24 +120,23 @@ public class Games extends SuperController {
 	public static Result list() {
 		return ok(Json.toJson(Game.findAll()));
 	}
-	
+
+	@Transactional
+	@Authenticated(Secured.class)
+	@With(InGame.class)
 	public static Result quit() {
 		final User currentUser = currentUser();
-		if (currentUser.getGame() == null) {
-			return badRequest(jsonError("player does not have a game"));
-		}
 		Game game = currentUser.getGame();
 		game.removePlayer(currentUser);
-		sendOneCommandToGame(currentUser.getGame(), new PlayerQuitCommand(currentUser.getUsername()));
+		sendOneCommandToGame(game, new PlayerQuitCommand(currentUser.getUsername()));
 		return ok(jsonInfo("quit game"));
 	}
 	
+	@Transactional
+	@Authenticated(Secured.class)
+	@With(InGame.class)
 	public static Result info() {
-		User currentUser = currentUser();
-		if (currentUser.inGame()) {
-			return ok(Json.toJson(currentUser.getGame()));
-		}
-		return badRequest(jsonError("Not in a game"));
+		return ok(Json.toJson(currentUser().getGame()));
 	}
 	
 }

@@ -18,5 +18,10 @@ GET		/games/stream				controllers.Games.stream()
 GET		/games/send					controllers.Games.send()
 GET		/games/						controllers.Games.list()
 
+POST	/action/attack				controllers.Actions.attack()
+POST	/action/playCard			controllers.Actions.playCard()
+POST	/action/start				controllers.Actions.start()
+POST	/action/extendDuration		controllers.Actions.extendDuration()
+
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
