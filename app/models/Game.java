@@ -18,17 +18,17 @@ import exceptions.TooManyPlayersException;
 
 @Entity
 public class Game {
-	
+
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
-	
+
 	@Column
 	private String name;
-	
+
 	@Column
 	private boolean started;
-	
+
 	public boolean isStarted() {
 		return started;
 	}
@@ -40,19 +40,20 @@ public class Game {
 		this.started = started;
 	}
 
-	@OneToMany(mappedBy="game", fetch=FetchType.LAZY)
+	@OneToMany(mappedBy = "game", fetch = FetchType.LAZY)
 	private List<User> players;
 
 	public Game() {
 		this.players = new LinkedList<User>();
 	}
-	
+
 	public void addFirstPlayer(User user) throws AlreadyInGameException {
 		user.setGame(this);
 		this.players.add(user);
 	}
-	
-	public void addPlayer(User user) throws AlreadyInGameException, TooManyPlayersException, GameAlreadyStartedException {
+
+	public void addPlayer(User user) throws AlreadyInGameException,
+			TooManyPlayersException, GameAlreadyStartedException {
 		if (this.isStarted()) {
 			throw new GameAlreadyStartedException();
 		}
@@ -62,7 +63,7 @@ public class Game {
 		user.setGame(this);
 		this.players.add(user);
 	}
-	
+
 	public void removePlayer(User user) {
 		if (this.players.contains(user)) {
 			user.removeGame();
@@ -72,16 +73,17 @@ public class Game {
 			}
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public static List<Game> findAll() {
-		return (List<Game>)JPA.em().createQuery("SELECT g FROM Game g").getResultList();
+		return (List<Game>) JPA.em().createQuery("SELECT g FROM Game g")
+				.getResultList();
 	}
-	
+
 	public static Game findById(long id) {
-		return (Game)JPA.em().find(Game.class, id);
+		return (Game) JPA.em().find(Game.class, id);
 	}
-	
+
 	public static void save(Game game) {
 		if (game.getId() == 0) {
 			JPA.em().persist(game);
@@ -89,7 +91,7 @@ public class Game {
 			JPA.em().merge(game);
 		}
 	}
-	
+
 	public long getId() {
 		return id;
 	}
@@ -113,13 +115,13 @@ public class Game {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	private User currentPlayer;
-	
+
 	public boolean isCurrentPlayer(User player) {
 		return this.currentPlayer == player;
 	}
-	
+
 	public User NextPlayer() {
 		int index = this.players.indexOf(this.currentPlayer);
 		if (index == this.players.size() - 1) {
