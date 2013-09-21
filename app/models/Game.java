@@ -13,6 +13,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 
 import play.db.jpa.JPA;
+import cards.Deck;
 import exceptions.AlreadyInGameException;
 import exceptions.GameAlreadyStartedException;
 import exceptions.TooManyPlayersException;
@@ -139,5 +140,16 @@ public class Game {
 			}
 		}
 		return this.currentPlayer;
+	}
+	
+	@Transient
+	private Deck deck;
+
+	public Deck getDeck() {
+		return deck;
+	}
+
+	public void setDeck(Deck deck) {
+		this.deck = deck;
 	}
 }
