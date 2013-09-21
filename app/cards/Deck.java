@@ -80,4 +80,11 @@ public class Deck {
 		this.deck = deck2;
 	}
 	
+	public Card takeOne() {
+		int lastIndex = this.deck.size() - 1;
+		Card card = this.deck.get(lastIndex);
+		this.deck.remove(lastIndex);
+		return card;
+	}
+	
 }
