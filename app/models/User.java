@@ -1,6 +1,8 @@
 package models;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -194,6 +196,13 @@ public class User {
 	
 	public Card getMalus() {
 		return this.malus;
+	}
+	
+	@Transient
+	private List<Card> cards = new LinkedList<Card>();
+	
+	public void addCard(Card card) {
+		this.cards.add(card);
 	}
 	
 	// Attaque le joueur avec une carte
