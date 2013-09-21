@@ -10,6 +10,19 @@ import exceptions.WrongCardForSuchSlotException;
 
 @JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include=JsonTypeInfo.As.PROPERTY, property="type")
 public abstract class Card {
+	
+	private static int uniqueCardIdInc = 1;
+
+	private int id;
+	
+	public Card() {
+		this.id = uniqueCardIdInc++;
+	}
+	
+	public int getId() {
+		return this.id;
+	}
+	
 	public boolean canCureCrevaison() {
 		return false;
 	}
