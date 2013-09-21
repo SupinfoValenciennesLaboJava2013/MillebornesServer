@@ -4,6 +4,7 @@ import static akka.pattern.Patterns.ask;
 
 import java.util.List;
 
+import cards.DistanceCard;
 import middlewares.InGame;
 import models.Game;
 import models.User;
@@ -17,12 +18,10 @@ import play.mvc.Security.Authenticated;
 import play.mvc.With;
 import util.GameCommands;
 import actors.GameStreamActor;
-
 import commands.AbstractCommand;
 import commands.CardReceiveCommand;
 import commands.PlayerJoinCommand;
 import commands.PlayerQuitCommand;
-
 import exceptions.AlreadyInGameException;
 import exceptions.GameAlreadyStartedException;
 import exceptions.NotInAGameException;
@@ -75,7 +74,7 @@ public class Games extends SuperController {
 	@With(InGame.class)
 	public static Result send() {
 		final User currentUser = currentUser();
-		sendCommandToGame(currentUser.getGame(), new CardReceiveCommand("100km"));
+		sendCommandToGame(currentUser.getGame(), new CardReceiveCommand(DistanceCard.get100km()));
 		sendCommandToUser(currentUser.getGame(), currentUser, new PlayerJoinCommand("admin"));
 		sendFinalize();
 		return ok(jsonInfo("ok"));

@@ -1,18 +1,20 @@
 package commands;
 
+import cards.Card;
+
 public class CardReceiveCommand extends AbstractCommand {
 
-	private String card;
+	private Card card;
 	
-	public CardReceiveCommand(String card) {
+	public CardReceiveCommand(Card card) {
 		this.setCard(card);
 	}
 	
-	public String getCard() {
+	public Card getCard() {
 		return card;
 	}
 
-	public void setCard(String card) {
+	public void setCard(Card card) {
 		this.card = card;
 	}
 
