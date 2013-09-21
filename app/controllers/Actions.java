@@ -2,11 +2,17 @@ package controllers;
 
 import middlewares.InGame;
 import middlewares.MyTurn;
+import models.Game;
 import models.User;
 import play.db.jpa.Transactional;
 import play.mvc.Result;
 import play.mvc.Security.Authenticated;
 import play.mvc.With;
+import cards.Card;
+import cards.Deck;
+
+import commands.CardReceiveCommand;
+
 import exceptions.GameAlreadyStartedException;
 
 @Transactional
@@ -43,6 +49,7 @@ public class Actions extends SuperController {
 	 */
 	public static Result start() {
 		User currentUser = currentUser();
+		Game game = currentUser.getGame();
 		if (currentUser.getGame().getPlayers().get(0) != currentUser) {
 			return badRequest(jsonError("Only the creator of the game can start it"));
 		}
@@ -51,6 +58,19 @@ public class Actions extends SuperController {
 		} catch (GameAlreadyStartedException e) {
 			return badRequest(jsonError("The game has already started"));
 		}
+		
+		Deck deck = new Deck();
+		deck.shuffle();
+		game.setDeck(deck);
+		Card card;
+		for (int i = 0; i < 6; i++) {
+			for (User u: game.getPlayers()) {
+				card = deck.takeOne();
+				u.addCard(card);
+				sendCommandToUser(game, u, new CardReceiveCommand(card));
+			}
+		}
+		sendFinalize();
 		return ok(jsonInfo("game started"));
 	}
 }
