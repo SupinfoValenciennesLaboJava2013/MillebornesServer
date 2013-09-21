@@ -71,8 +71,11 @@ public class Deck {
 	
 	public void shuffle() {
 		List<Card> deck2 = new LinkedList<Card>();
+		int index;
 		while (!this.deck.isEmpty()) {
-			deck2.add(this.deck.get((int)Math.floor(Math.random() * this.deck.size())));
+			index = (int) Math.floor(Math.random() * this.deck.size());
+			deck2.add(this.deck.get(index));
+			this.deck.remove(index);
 		}
 		this.deck = deck2;
 	}
