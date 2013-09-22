@@ -21,6 +21,7 @@ import cards.safeties.RightOfWay;
 public class Deck {
 	
 	private List<Card> deck = new LinkedList<Card>();
+	private List<Card> used = new LinkedList<Card>();
 	
 	public Deck()
 	{
@@ -85,6 +86,10 @@ public class Deck {
 		Card card = this.deck.get(lastIndex);
 		this.deck.remove(lastIndex);
 		return card;
+	}
+	
+	public void AddUsedCard(Card c) {
+		this.used.add(c);
 	}
 	
 }
