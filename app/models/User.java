@@ -218,4 +218,13 @@ public class User {
 			throw new CannotPlayThisRemedyCardException();
 		}
 	}
+	
+	public Card findCardById(int id) {
+		for (Card c: this.cards) {
+			if (c.getId() == id) {
+				return c;
+			}
+		}
+		return null;
+	}
 }

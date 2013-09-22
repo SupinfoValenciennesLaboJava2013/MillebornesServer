@@ -12,7 +12,10 @@ import cards.Card;
 import cards.Deck;
 
 import commands.CardReceiveCommand;
+import commands.PlayerChangeDistanceCommand;
+import commands.UserCuredCommand;
 
+import exceptions.CannotPlayThisCardException;
 import exceptions.GameAlreadyStartedException;
 
 @Transactional
@@ -24,7 +27,31 @@ public class Actions extends SuperController {
 	 * Jouer une carte pour soi même
 	 * @return
 	 */
-	public static Result playCard(/* Card card */) {
+	public static Result playCard(int id) {
+		User currentUser = currentUser();
+		Card card = currentUser.findCardById(id);
+		if (card == null) {
+			return badRequest(jsonError("Player does not have this card"));
+		}
+		boolean cardPlayed = false;
+		try {
+			card.advancePlayer(currentUser);
+			sendOneCommandToGame(currentUser.getGame(), new PlayerChangeDistanceCommand(currentUser.getKm()));
+			cardPlayed = true;
+		} catch (CannotPlayThisCardException e) {
+			
+		}
+		try {
+			card.curePlayer(currentUser);
+			// TODO Envoyer l'id du joueur soigné
+			sendOneCommandToGame(currentUser.getGame(), new UserCuredCommand());
+			cardPlayed = true;
+		} catch (CannotPlayThisCardException e) {
+			
+		}
+		if (!cardPlayed) {
+			return badRequest(jsonError("Can not play this card"));
+		}
 		return status(501, jsonError("Not yet implemented"));
 	}
 	
