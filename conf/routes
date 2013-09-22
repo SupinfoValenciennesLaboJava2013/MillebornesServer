@@ -15,6 +15,7 @@ POST	/games/join/:gameId			controllers.Games.join(gameId: Long)
 POST	/games/quit					controllers.Games.quit()
 GET 	/games/info					controllers.Games.info()
 GET		/games/stream				controllers.Games.stream()
+GET		/games/events				controllers.Games.events()
 GET		/games/send					controllers.Games.send()
 GET		/games/						controllers.Games.list()
 

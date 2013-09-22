@@ -72,6 +72,13 @@ public class Games extends SuperController {
 	@Transactional
 	@Authenticated(Secured.class)
 	@With(InGame.class)
+	public static Result events() {
+		return stream();
+	}
+
+	@Transactional
+	@Authenticated(Secured.class)
+	@With(InGame.class)
 	public static Result send() {
 		final User currentUser = currentUser();
 		sendCommandToGame(currentUser.getGame(), new CardReceiveCommand(DistanceCard.get100km()));
