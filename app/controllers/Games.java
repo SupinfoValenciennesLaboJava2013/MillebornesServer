@@ -38,6 +38,11 @@ public class Games extends SuperController {
 	@With(InGame.class)
 	public static Result stream() {
 		final User currentUser = currentUser();
+		long timeout = 5000;
+		String[] timeoutStr = request().queryString().get("timeout");
+		if (timeoutStr != null) {
+			timeout = Long.parseLong(timeoutStr[0]);
+		}
 		List<AbstractCommand> commands;
 		try {
 			commands = GameCommands.getCommands(currentUser);
@@ -48,7 +53,7 @@ public class Games extends SuperController {
 			return ok(Json.toJson(commands));
 		}
 		return async(
-			Akka.asPromise(ask(myActor, GameStreamActor.Command.subscribe, 5000))
+			Akka.asPromise(ask(myActor, GameStreamActor.Command.subscribe, timeout))
 				.map(
 					new Function<Object,Result>() {
 						public Result apply(Object response) {
