@@ -4,6 +4,8 @@
 
 # Home page
 GET     /                           controllers.Application.index()
+POST    /echo						controllers.Application.echo()
+
 POST 	/users/register				controllers.Users.register()
 POST 	/users/login				controllers.Users.login()
 POST 	/users/logout				controllers.Users.logout()
