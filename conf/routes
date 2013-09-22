@@ -20,7 +20,7 @@ GET		/games/send					controllers.Games.send()
 GET		/games/						controllers.Games.list()
 
 POST	/action/attack				controllers.Actions.attack()
-POST	/action/playCard			controllers.Actions.playCard()
+POST	/action/playCard			controllers.Actions.playCard(i: Int)
 POST	/action/start				controllers.Actions.start()
 POST	/action/extendDuration		controllers.Actions.extendDuration()
 
