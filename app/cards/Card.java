@@ -81,4 +81,11 @@ public abstract class Card {
 	public void advancePlayer(User user) throws CannotPlayThisCardException {
 		throw new CannotPlayThisCardException();
 	}
+	
+	public void curePlayer(User user) throws CannotPlayThisCardException {
+		if (!user.getMalus().canBeCuredBy(this)) {
+			throw new CannotPlayThisCardException();
+		}
+		user.setMalus(null);
+	}
 }
