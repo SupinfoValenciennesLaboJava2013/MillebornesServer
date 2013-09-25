@@ -123,12 +123,12 @@ public class Game {
 
 	public boolean isCurrentPlayer(User player) {
 		if (this.currentPlayer == null) {
-			this.NextPlayer();
+			this.nextPlayer();
 		}
 		return this.currentPlayer == player;
 	}
 
-	public User NextPlayer() {
+	public User nextPlayer() {
 		if (this.currentPlayer == null) {
 			this.currentPlayer = this.players.get(0);
 		} else {

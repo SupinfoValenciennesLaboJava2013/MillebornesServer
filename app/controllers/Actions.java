@@ -96,6 +96,7 @@ public class Actions extends SuperController {
 			return badRequest(jsonError("player does not have this card"));
 		}
 		game.getDeck().putBack(card);
+		game.nextPlayer();
 		sendOneCommandToGame(game, new CardRemoveCommand(card));
 		return ok(jsonInfo("ok"));
 	}
