@@ -76,7 +76,7 @@ public class Actions extends SuperController {
 	 * Piocher une carte
 	 * @return
 	 */
-	public static Result pickupCard() {
+	public static Result drawCard() {
 		User currentUser = currentUser();
 		Game game = currentUser.getGame();
 		Card card = game.getDeck().takeOne();
@@ -88,7 +88,7 @@ public class Actions extends SuperController {
 	 * Jeter une carte
 	 * @return
 	 */
-	public static Result putbackCard(long cardId) {
+	public static Result throwCard(long cardId) {
 		User currentUser = currentUser();
 		Game game = currentUser.getGame();
 		Card card = currentUser.findCardById(cardId);

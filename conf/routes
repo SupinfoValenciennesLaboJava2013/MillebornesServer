@@ -32,8 +32,8 @@ POST	/action/attack				controllers.Actions.attack()
 POST	/action/playCard			controllers.Actions.playCard(i: Int)
 POST	/action/start				controllers.Actions.start()
 POST	/action/extendDuration		controllers.Actions.extendDuration()
-POST	/action/pickupCard			controllers.Actions.pickupCard()
-POST	/action/putbackCard			controllers.Actions.putbackCard(cardId: Long)
+POST	/action/drawCard			controllers.Actions.drawCard()
+POST	/action/throwCard			controllers.Actions.throwCard(cardId: Long)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
