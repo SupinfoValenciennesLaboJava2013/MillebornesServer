@@ -219,9 +219,9 @@ public class User {
 		}
 	}
 	
-	public Card findCardById(int id) {
+	public Card findCardById(long cardId) {
 		for (Card c: this.cards) {
-			if (c.getId() == id) {
+			if (c.getId() == cardId) {
 				return c;
 			}
 		}

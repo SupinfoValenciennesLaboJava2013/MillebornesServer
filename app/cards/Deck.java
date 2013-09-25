@@ -91,5 +91,10 @@ public class Deck {
 	public void AddUsedCard(Card c) {
 		this.used.add(c);
 	}
+
+	public void putBack(Card card) {
+		// TODO Vérifier que la carte est pas dans la pile
+		this.used.add(card);
+	}
 	
 }
