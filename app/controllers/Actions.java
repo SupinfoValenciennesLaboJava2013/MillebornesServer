@@ -76,7 +76,7 @@ public class Actions extends SuperController {
 	 * Piocher une carte
 	 * @return
 	 */
-	public Result pickupCard() {
+	public static Result pickupCard() {
 		User currentUser = currentUser();
 		Game game = currentUser.getGame();
 		Card card = game.getDeck().takeOne();
@@ -88,7 +88,7 @@ public class Actions extends SuperController {
 	 * Jeter une carte
 	 * @return
 	 */
-	public Result putbackCard(long cardId) {
+	public static Result putbackCard(long cardId) {
 		User currentUser = currentUser();
 		Game game = currentUser.getGame();
 		Card card = currentUser.findCardById(cardId);
@@ -96,7 +96,7 @@ public class Actions extends SuperController {
 			return badRequest(jsonError("player does not have this card"));
 		}
 		game.getDeck().putBack(card);
-		sendOneCommandToUser(game, currentUser, new CardRemoveCommand(card));
+		sendOneCommandToGame(game, new CardRemoveCommand(card));
 		return ok(jsonInfo("ok"));
 	}
 	
